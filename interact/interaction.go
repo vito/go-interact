@@ -10,16 +10,20 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// Interaction represents a single question to ask, optionally with a set of
+// choices to limit the answer to.
 type Interaction struct {
-	Input  io.Reader
-	Output io.Writer
-
 	Prompt  string
 	Choices []Choice
+
+	Input  io.Reader
+	Output io.Writer
 }
 
 // NewInteraction constructs an interaction with the given prompt, limited to
 // the given choices, if any.
+//
+// Defaults Input and Output to os.Stdin and os.Stderr, respectively.
 func NewInteraction(prompt string, choices ...Choice) Interaction {
 	return Interaction{
 		Input:   os.Stdin,
@@ -30,7 +34,8 @@ func NewInteraction(prompt string, choices ...Choice) Interaction {
 }
 
 // Resolve prints the prompt, indicating the default value, and asks for the
-// value to populate into the destination.
+// value to populate into the destination dst, which should be a pointer to a
+// value to set.
 //
 // The default value is whatever value is currently held in dst, and will be
 // shown in the prompt. Note that zero-values are valid defaults (e.g. false
@@ -42,6 +47,13 @@ func NewInteraction(prompt string, choices ...Choice) Interaction {
 // the value held in dst within the set of choices. The number corresponding
 // to the choice will be the default value shown to the user. If no default is
 // found, Resolve will require the user to make a selection.
+//
+// The type of dst determines how the value is read. Currently supported types
+// for the destination are int, string, bool, and any arbitrary value that is
+// defined within the set of Choices.
+//
+// Valid input strings for bools are "y", "n", "yes", and "no". Integer values
+// are parsed in base-10. String values will not include any trailing linebreak.
 func (interaction Interaction) Resolve(dst interface{}) error {
 	if file, ok := interaction.Input.(*os.File); ok && terminal.IsTerminal(int(file.Fd())) {
 		state, err := terminal.MakeRaw(int(file.Fd()))
