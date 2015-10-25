@@ -66,13 +66,15 @@ func (interaction Interaction) Resolve(dst interface{}) error {
 
 	rw := readWriter{interaction.Input, interaction.Output}
 
-	term := terminal.NewTerminal(rw, interaction.prompt(dst))
+	prompt := interaction.prompt(dst)
+
+	term := terminal.NewTerminal(rw, prompt)
 
 	if len(interaction.Choices) == 0 {
-		return interaction.resolveSingle(dst, term)
+		return interaction.resolveSingle(dst, term, prompt)
 	}
 
-	return interaction.resolveChoices(dst, term)
+	return interaction.resolveChoices(dst, term, prompt)
 }
 
 func (interaction Interaction) prompt(dst interface{}) string {
@@ -106,6 +108,12 @@ func (interaction Interaction) prompt(dst interface{}) string {
 		}
 
 		return fmt.Sprintf("%s [%s]: ", interaction.Prompt, indicator)
+	case *Password:
+		if len(*v) == 0 {
+			return fmt.Sprintf("%s (): ", interaction.Prompt)
+		}
+
+		return fmt.Sprintf("%s (has default): ", interaction.Prompt)
 	default:
 		return fmt.Sprintf("%s (unknown): ", interaction.Prompt)
 	}
@@ -127,9 +135,9 @@ func (interaction Interaction) choiceNumber(dst interface{}) (int, bool) {
 	return 0, false
 }
 
-func (interaction Interaction) resolveSingle(dst interface{}, term *terminal.Terminal) error {
+func (interaction Interaction) resolveSingle(dst interface{}, term *terminal.Terminal, prompt string) error {
 	for {
-		_, retry, err := interaction.readInto(dst, term)
+		_, retry, err := interaction.readInto(dst, term, prompt)
 		if err == io.EOF {
 			return err
 		}
@@ -149,7 +157,7 @@ func (interaction Interaction) resolveSingle(dst interface{}, term *terminal.Ter
 	return nil
 }
 
-func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Terminal) error {
+func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Terminal, prompt string) error {
 	dstVal := reflect.ValueOf(dst)
 
 	for i, choice := range interaction.Choices {
@@ -165,9 +173,9 @@ func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Te
 
 		num, present := interaction.choiceNumber(dst)
 		if present {
-			_, retry, err = interaction.readInto(&num, term)
+			_, retry, err = interaction.readInto(&num, term, prompt)
 		} else {
-			_, retry, err = interaction.readInto(Required(&num), term)
+			_, retry, err = interaction.readInto(Required(&num), term, prompt)
 		}
 
 		if err == io.EOF {
@@ -214,11 +222,11 @@ type readWriter struct {
 	io.Writer
 }
 
-func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal) (bool, bool, error) {
+func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal, prompt string) (bool, bool, error) {
 	switch v := dst.(type) {
 	case RequiredDestination:
 		for {
-			read, retry, err := interaction.readInto(v.Destination, term)
+			read, retry, err := interaction.readInto(v.Destination, term, prompt)
 			if err != nil {
 				return false, retry, err
 			}
@@ -258,6 +266,20 @@ func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal
 		}
 
 		*v = line
+
+		return true, false, nil
+
+	case *Password:
+		pass, err := term.ReadPassword(prompt)
+		if err != nil {
+			return false, false, err
+		}
+
+		if len(pass) == 0 {
+			return false, false, nil
+		}
+
+		*v = Password(pass)
 
 		return true, false, nil
 
