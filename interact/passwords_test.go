@@ -18,19 +18,19 @@ var _ = Describe("Resolving into passwords", func() {
 			Entry("when a string is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "forty two\r",
+				Input: "forty two\n",
 
 				ExpectedAnswer: interact.Password("forty two"),
-				ExpectedOutput: "some prompt (): \r\n",
+				ExpectedOutput: "some prompt (): \n",
 			}),
 
 			Entry("when a blank line is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: interact.Password(""),
-				ExpectedOutput: "some prompt (): \r\n",
+				ExpectedOutput: "some prompt (): \n",
 			}),
 		)
 
@@ -43,29 +43,29 @@ var _ = Describe("Resolving into passwords", func() {
 				Entry("when a string is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "forty two\r",
+					Input: "forty two\n",
 
 					ExpectedAnswer: interact.Password("forty two"),
-					ExpectedOutput: "some prompt: \r\n",
+					ExpectedOutput: "some prompt: \n",
 				}),
 
 				Entry("when a blank line is entered, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "\r",
+					Input: "\n",
 
 					ExpectedAnswer: interact.Password(""),
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt: \r\nsome prompt: ",
+					ExpectedOutput: "some prompt: \nsome prompt: ",
 				}),
 
 				Entry("when a blank line is entered, followed by a string", Example{
 					Prompt: "some prompt",
 
-					Input: "\rforty two\r",
+					Input: "\nforty two\n",
 
 					ExpectedAnswer: interact.Password("forty two"),
-					ExpectedOutput: "some prompt: \r\nsome prompt: \r\n",
+					ExpectedOutput: "some prompt: \nsome prompt: \n",
 				}),
 			)
 		})
@@ -80,19 +80,19 @@ var _ = Describe("Resolving into passwords", func() {
 			Entry("when a string is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "forty two\r",
+				Input: "forty two\n",
 
 				ExpectedAnswer: interact.Password("forty two"),
-				ExpectedOutput: "some prompt (has default): \r\n",
+				ExpectedOutput: "some prompt (has default): \n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: interact.Password("some default"),
-				ExpectedOutput: "some prompt (has default): \r\n",
+				ExpectedOutput: "some prompt (has default): \n",
 			}),
 		)
 	})

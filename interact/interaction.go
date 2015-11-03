@@ -55,6 +55,9 @@ func NewInteraction(prompt string, choices ...Choice) Interaction {
 // Valid input strings for bools are "y", "n", "yes", and "no". Integer values
 // are parsed in base-10. String values will not include any trailing linebreak.
 func (interaction Interaction) Resolve(dst interface{}) error {
+	prompt := interaction.prompt(dst)
+
+	var user userIO
 	if file, ok := interaction.Input.(*os.File); ok && terminal.IsTerminal(int(file.Fd())) {
 		state, err := terminal.MakeRaw(int(file.Fd()))
 		if err != nil {
@@ -62,19 +65,17 @@ func (interaction Interaction) Resolve(dst interface{}) error {
 		}
 
 		defer terminal.Restore(int(file.Fd()), state)
+
+		user = newTTYUser(interaction.Input, interaction.Output)
+	} else {
+		user = newNonTTYUser(interaction.Input, interaction.Output)
 	}
-
-	rw := readWriter{interaction.Input, interaction.Output}
-
-	prompt := interaction.prompt(dst)
-
-	term := terminal.NewTerminal(rw, prompt)
 
 	if len(interaction.Choices) == 0 {
-		return interaction.resolveSingle(dst, term, prompt)
+		return interaction.resolveSingle(dst, user, prompt)
 	}
 
-	return interaction.resolveChoices(dst, term, prompt)
+	return interaction.resolveChoices(dst, user, prompt)
 }
 
 func (interaction Interaction) prompt(dst interface{}) string {
@@ -135,16 +136,16 @@ func (interaction Interaction) choiceNumber(dst interface{}) (int, bool) {
 	return 0, false
 }
 
-func (interaction Interaction) resolveSingle(dst interface{}, term *terminal.Terminal, prompt string) error {
+func (interaction Interaction) resolveSingle(dst interface{}, user userIO, prompt string) error {
 	for {
-		_, retry, err := interaction.readInto(dst, term, prompt)
+		_, retry, err := interaction.readInto(dst, user, prompt)
 		if err == io.EOF {
 			return err
 		}
 
 		if err != nil {
 			if retry {
-				fmt.Fprintf(term, "invalid input (%s)\r\n", err)
+				user.WriteLine(fmt.Sprintf("invalid input (%s)", err))
 				continue
 			} else {
 				return err
@@ -157,11 +158,11 @@ func (interaction Interaction) resolveSingle(dst interface{}, term *terminal.Ter
 	return nil
 }
 
-func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Terminal, prompt string) error {
+func (interaction Interaction) resolveChoices(dst interface{}, user userIO, prompt string) error {
 	dstVal := reflect.ValueOf(dst)
 
 	for i, choice := range interaction.Choices {
-		_, err := fmt.Fprintf(interaction.Output, "%d: %s\r\n", i+1, choice.Display)
+		err := user.WriteLine(fmt.Sprintf("%d: %s", i+1, choice.Display))
 		if err != nil {
 			return err
 		}
@@ -173,9 +174,9 @@ func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Te
 
 		num, present := interaction.choiceNumber(dst)
 		if present {
-			_, retry, err = interaction.readInto(&num, term, prompt)
+			_, retry, err = interaction.readInto(&num, user, prompt)
 		} else {
-			_, retry, err = interaction.readInto(Required(&num), term, prompt)
+			_, retry, err = interaction.readInto(Required(&num), user, prompt)
 		}
 
 		if err == io.EOF {
@@ -184,7 +185,7 @@ func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Te
 
 		if err != nil {
 			if retry {
-				fmt.Fprintf(interaction.Output, "invalid selection (%s)\r\n", err)
+				user.WriteLine(fmt.Sprintf("invalid selection (%s)", err))
 				continue
 			} else {
 				return err
@@ -192,7 +193,7 @@ func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Te
 		}
 
 		if num == 0 || num > len(interaction.Choices) {
-			fmt.Fprintf(interaction.Output, "invalid selection (must be 1-%d)\r\n", len(interaction.Choices))
+			user.WriteLine(fmt.Sprintf("invalid selection (must be 1-%d)", len(interaction.Choices)))
 			continue
 		}
 
@@ -217,16 +218,11 @@ func (interaction Interaction) resolveChoices(dst interface{}, term *terminal.Te
 	}
 }
 
-type readWriter struct {
-	io.Reader
-	io.Writer
-}
-
-func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal, prompt string) (bool, bool, error) {
+func (interaction Interaction) readInto(dst interface{}, user userIO, prompt string) (bool, bool, error) {
 	switch v := dst.(type) {
 	case RequiredDestination:
 		for {
-			read, retry, err := interaction.readInto(v.Destination, term, prompt)
+			read, retry, err := interaction.readInto(v.Destination, user, prompt)
 			if err != nil {
 				return false, retry, err
 			}
@@ -237,7 +233,7 @@ func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal
 		}
 
 	case *int:
-		line, err := term.ReadLine()
+		line, err := user.ReadLine(prompt)
 		if err != nil {
 			return false, false, err
 		}
@@ -256,7 +252,7 @@ func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal
 		return true, false, nil
 
 	case *string:
-		line, err := term.ReadLine()
+		line, err := user.ReadLine(prompt)
 		if err != nil {
 			return false, false, err
 		}
@@ -270,7 +266,7 @@ func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal
 		return true, false, nil
 
 	case *Password:
-		pass, err := term.ReadPassword(prompt)
+		pass, err := user.ReadPassword(prompt)
 		if err != nil {
 			return false, false, err
 		}
@@ -284,7 +280,7 @@ func (interaction Interaction) readInto(dst interface{}, term *terminal.Terminal
 		return true, false, nil
 
 	case *bool:
-		line, err := term.ReadLine()
+		line, err := user.ReadLine(prompt)
 		if err != nil {
 			return false, false, err
 		}

@@ -18,19 +18,19 @@ var _ = Describe("Resolving into strings", func() {
 			Entry("when a string is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "forty two\r",
+				Input: "forty two\n",
 
 				ExpectedAnswer: "forty two",
-				ExpectedOutput: "some prompt (): forty two\r\n",
+				ExpectedOutput: "some prompt (): forty two\n",
 			}),
 
 			Entry("when a blank line is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: "",
-				ExpectedOutput: "some prompt (): \r\n",
+				ExpectedOutput: "some prompt (): \n",
 			}),
 		)
 
@@ -43,29 +43,29 @@ var _ = Describe("Resolving into strings", func() {
 				Entry("when a string is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "forty two\r",
+					Input: "forty two\n",
 
 					ExpectedAnswer: "forty two",
-					ExpectedOutput: "some prompt: forty two\r\n",
+					ExpectedOutput: "some prompt: forty two\n",
 				}),
 
 				Entry("when a blank line is entered, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "\r",
+					Input: "\n",
 
 					ExpectedAnswer: "",
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt: \r\nsome prompt: ",
+					ExpectedOutput: "some prompt: \nsome prompt: ",
 				}),
 
 				Entry("when a blank line is entered, followed by a string", Example{
 					Prompt: "some prompt",
 
-					Input: "\rforty two\r",
+					Input: "\nforty two\n",
 
 					ExpectedAnswer: "forty two",
-					ExpectedOutput: "some prompt: \r\nsome prompt: forty two\r\n",
+					ExpectedOutput: "some prompt: \nsome prompt: forty two\n",
 				}),
 			)
 		})
@@ -80,19 +80,19 @@ var _ = Describe("Resolving into strings", func() {
 			Entry("when a string is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "forty two\r",
+				Input: "forty two\n",
 
 				ExpectedAnswer: "forty two",
-				ExpectedOutput: "some prompt (some default): forty two\r\n",
+				ExpectedOutput: "some prompt (some default): forty two\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: "some default",
-				ExpectedOutput: "some prompt (some default): \r\n",
+				ExpectedOutput: "some prompt (some default): \n",
 			}),
 		)
 	})

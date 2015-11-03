@@ -27,113 +27,113 @@ var _ = Describe("Resolving from a set of choices", func() {
 			Entry("when '0' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r",
+				Input: "0\n",
 
 				ExpectedAnswer: arbitrary{},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 0\r\ninvalid selection (must be 1-3)\r\nsome prompt: ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 0\ninvalid selection (must be 1-3)\nsome prompt: ",
 			}),
 
 			Entry("when '0' is entered, followed by '1'", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r1\r",
+				Input: "0\n1\n",
 
 				ExpectedAnswer: arbitrary{"uno"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 0\r\ninvalid selection (must be 1-3)\r\nsome prompt: 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 0\ninvalid selection (must be 1-3)\nsome prompt: 1\n",
 			}),
 
 			Entry("when '1' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "1\r",
+				Input: "1\n",
 
 				ExpectedAnswer: arbitrary{"uno"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 1\n",
 			}),
 
 			Entry("when '2' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "2\r",
+				Input: "2\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 2\n",
 			}),
 
 			Entry("when '3' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "3\r",
+				Input: "3\n",
 
 				ExpectedAnswer: arbitrary{"tres"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 3\n",
 			}),
 
 			Entry("when '4' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r",
+				Input: "4\n",
 
 				ExpectedAnswer: arbitrary{},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 4\r\ninvalid selection (must be 1-3)\r\nsome prompt: ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 4\ninvalid selection (must be 1-3)\nsome prompt: ",
 			}),
 
 			Entry("when '4' is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r2\r",
+				Input: "4\n2\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: 4\r\ninvalid selection (must be 1-3)\r\nsome prompt: 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: 4\ninvalid selection (must be 1-3)\nsome prompt: 2\n",
 			}),
 
 			Entry("when a blank line is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: arbitrary{},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: \r\nsome prompt: ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: \nsome prompt: ",
 			}),
 
 			Entry("when a blank line is entered, followed by '3'", Example{
 				Prompt: "some prompt",
 
-				Input: "\r3\r",
+				Input: "\n3\n",
 
 				ExpectedAnswer: arbitrary{"tres"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: \r\nsome prompt: 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: \nsome prompt: 3\n",
 			}),
 
 			Entry("when a non-selection is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: arbitrary{},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: foo\r\ninvalid selection (not a number)\r\nsome prompt: ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: foo\ninvalid selection (not a number)\nsome prompt: ",
 			}),
 
 			Entry("when a non-selection is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r2\r",
+				Input: "foo\n2\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: foo\r\ninvalid selection (not a number)\r\nsome prompt: 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: foo\ninvalid selection (not a number)\nsome prompt: 2\n",
 			}),
 
 			Entry("when a non-integer is entered, followed by a blank line, followed by '3'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r3\r",
+				Input: "foo\n\n3\n",
 
 				ExpectedAnswer: arbitrary{"tres"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt: foo\r\ninvalid selection (not a number)\r\nsome prompt: \r\nsome prompt: 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt: foo\ninvalid selection (not a number)\nsome prompt: \nsome prompt: 3\n",
 			}),
 		)
 
@@ -149,14 +149,14 @@ var _ = Describe("Resolving from a set of choices", func() {
 				Entry("when the unassignable choice is chosen", Example{
 					Prompt: "some prompt",
 
-					Input: "4\r",
+					Input: "4\n",
 
 					ExpectedAnswer: arbitrary{},
 					ExpectedErr: interact.NotAssignableError{
 						Destination: reflect.TypeOf(arbitrary{}),
 						Value:       reflect.TypeOf("bogus"),
 					},
-					ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: Bogus\r\nsome prompt: 4\r\n",
+					ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: Bogus\nsome prompt: 4\n",
 				}),
 			)
 		})
@@ -171,103 +171,103 @@ var _ = Describe("Resolving from a set of choices", func() {
 			Entry("when '0' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r",
+				Input: "0\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 0\r\ninvalid selection (must be 1-3)\r\nsome prompt (2): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 0\ninvalid selection (must be 1-3)\nsome prompt (2): ",
 			}),
 
 			Entry("when '0' is entered, followed by '1'", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r1\r",
+				Input: "0\n1\n",
 
 				ExpectedAnswer: arbitrary{"uno"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 0\r\ninvalid selection (must be 1-3)\r\nsome prompt (2): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 0\ninvalid selection (must be 1-3)\nsome prompt (2): 1\n",
 			}),
 
 			Entry("when '1' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "1\r",
+				Input: "1\n",
 
 				ExpectedAnswer: arbitrary{"uno"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 1\n",
 			}),
 
 			Entry("when '2' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "2\r",
+				Input: "2\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 2\n",
 			}),
 
 			Entry("when '3' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "3\r",
+				Input: "3\n",
 
 				ExpectedAnswer: arbitrary{"tres"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 3\n",
 			}),
 
 			Entry("when '4' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r",
+				Input: "4\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 4\r\ninvalid selection (must be 1-3)\r\nsome prompt (2): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 4\ninvalid selection (must be 1-3)\nsome prompt (2): ",
 			}),
 
 			Entry("when '4' is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r2\r",
+				Input: "4\n2\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): 4\r\ninvalid selection (must be 1-3)\r\nsome prompt (2): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): 4\ninvalid selection (must be 1-3)\nsome prompt (2): 2\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): \n",
 			}),
 
 			Entry("when a non-selection is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): foo\r\ninvalid selection (not a number)\r\nsome prompt (2): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): foo\ninvalid selection (not a number)\nsome prompt (2): ",
 			}),
 
 			Entry("when a non-selection is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r2\r",
+				Input: "foo\n2\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): foo\r\ninvalid selection (not a number)\r\nsome prompt (2): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): foo\ninvalid selection (not a number)\nsome prompt (2): 2\n",
 			}),
 
 			Entry("when a non-integer is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: arbitrary{"dos"},
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\nsome prompt (2): foo\r\ninvalid selection (not a number)\r\nsome prompt (2): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\nsome prompt (2): foo\ninvalid selection (not a number)\nsome prompt (2): \n",
 			}),
 		)
 	})
@@ -289,112 +289,112 @@ var _ = Describe("Resolving from a set of choices", func() {
 			Entry("when '0' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r",
+				Input: "0\n",
 
 				ExpectedAnswer: noArbAns(),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 0\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 0\ninvalid selection (must be 1-4)\nsome prompt (4): ",
 			}),
 
 			Entry("when '0' is entered, followed by '1'", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r1\r",
+				Input: "0\n1\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"uno"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 0\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 0\ninvalid selection (must be 1-4)\nsome prompt (4): 1\n",
 			}),
 
 			Entry("when '1' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "1\r",
+				Input: "1\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"uno"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 1\n",
 			}),
 
 			Entry("when '2' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "2\r",
+				Input: "2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 2\n",
 			}),
 
 			Entry("when '3' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "3\r",
+				Input: "3\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"tres"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 3\n",
 			}),
 
 			Entry("when '4' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r",
+				Input: "4\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 4\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 4\n",
 			}),
 
 			Entry("when '5' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "5\r",
+				Input: "5\n",
 
 				ExpectedAnswer: noArbAns(),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 5\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 5\ninvalid selection (must be 1-4)\nsome prompt (4): ",
 			}),
 
 			Entry("when '5' is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "5\r2\r",
+				Input: "5\n2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 5\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 5\ninvalid selection (must be 1-4)\nsome prompt (4): 2\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): \n",
 			}),
 
 			Entry("when a non-selection is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: noArbAns(),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): foo\r\ninvalid selection (not a number)\r\nsome prompt (4): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): foo\ninvalid selection (not a number)\nsome prompt (4): ",
 			}),
 
 			Entry("when a non-selection is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r2\r",
+				Input: "foo\n2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): foo\r\ninvalid selection (not a number)\r\nsome prompt (4): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): foo\ninvalid selection (not a number)\nsome prompt (4): 2\n",
 			}),
 
 			Entry("when a non-selection is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): foo\r\ninvalid selection (not a number)\r\nsome prompt (4): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): foo\ninvalid selection (not a number)\nsome prompt (4): \n",
 			}),
 		)
 	})
@@ -418,112 +418,112 @@ var _ = Describe("Resolving from a set of choices", func() {
 			Entry("when '0' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r",
+				Input: "0\n",
 
 				ExpectedAnswer: noArbAns(),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 0\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 0\ninvalid selection (must be 1-4)\nsome prompt (4): ",
 			}),
 
 			Entry("when '0' is entered, followed by '1'", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r1\r",
+				Input: "0\n1\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"uno"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 0\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 0\ninvalid selection (must be 1-4)\nsome prompt (4): 1\n",
 			}),
 
 			Entry("when '1' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "1\r",
+				Input: "1\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"uno"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 1\n",
 			}),
 
 			Entry("when '2' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "2\r",
+				Input: "2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 2\n",
 			}),
 
 			Entry("when '3' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "3\r",
+				Input: "3\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"tres"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 3\n",
 			}),
 
 			Entry("when '4' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r",
+				Input: "4\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 4\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 4\n",
 			}),
 
 			Entry("when '5' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "5\r",
+				Input: "5\n",
 
 				ExpectedAnswer: noArbAns(),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 5\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 5\ninvalid selection (must be 1-4)\nsome prompt (4): ",
 			}),
 
 			Entry("when '5' is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "5\r2\r",
+				Input: "5\n2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): 5\r\ninvalid selection (must be 1-4)\r\nsome prompt (4): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): 5\ninvalid selection (must be 1-4)\nsome prompt (4): 2\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): \n",
 			}),
 
 			Entry("when a non-selection is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: noArbAns(),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): foo\r\ninvalid selection (not a number)\r\nsome prompt (4): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): foo\ninvalid selection (not a number)\nsome prompt (4): ",
 			}),
 
 			Entry("when a non-selection is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r2\r",
+				Input: "foo\n2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): foo\r\ninvalid selection (not a number)\r\nsome prompt (4): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): foo\ninvalid selection (not a number)\nsome prompt (4): 2\n",
 			}),
 
 			Entry("when a non-selection is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (4): foo\r\ninvalid selection (not a number)\r\nsome prompt (4): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (4): foo\ninvalid selection (not a number)\nsome prompt (4): \n",
 			}),
 		)
 	})
@@ -545,112 +545,112 @@ var _ = Describe("Resolving from a set of choices", func() {
 			Entry("when '0' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r",
+				Input: "0\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 0\r\ninvalid selection (must be 1-4)\r\nsome prompt (2): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 0\ninvalid selection (must be 1-4)\nsome prompt (2): ",
 			}),
 
 			Entry("when '0' is entered, followed by '1'", Example{
 				Prompt: "some prompt",
 
-				Input: "0\r1\r",
+				Input: "0\n1\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"uno"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 0\r\ninvalid selection (must be 1-4)\r\nsome prompt (2): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 0\ninvalid selection (must be 1-4)\nsome prompt (2): 1\n",
 			}),
 
 			Entry("when '1' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "1\r",
+				Input: "1\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"uno"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 1\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 1\n",
 			}),
 
 			Entry("when '2' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "2\r",
+				Input: "2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 2\n",
 			}),
 
 			Entry("when '3' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "3\r",
+				Input: "3\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"tres"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 3\n",
 			}),
 
 			Entry("when '4' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "4\r",
+				Input: "4\n",
 
 				ExpectedAnswer: noArbAns(),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 4\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 4\n",
 			}),
 
 			Entry("when '5' is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "5\r",
+				Input: "5\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 5\r\ninvalid selection (must be 1-4)\r\nsome prompt (2): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 5\ninvalid selection (must be 1-4)\nsome prompt (2): ",
 			}),
 
 			Entry("when '5' is entered, followed by '3'", Example{
 				Prompt: "some prompt",
 
-				Input: "5\r3\r",
+				Input: "5\n3\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"tres"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): 5\r\ninvalid selection (must be 1-4)\r\nsome prompt (2): 3\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): 5\ninvalid selection (must be 1-4)\nsome prompt (2): 3\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): \n",
 			}),
 
 			Entry("when a non-selection is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): foo\r\ninvalid selection (not a number)\r\nsome prompt (2): ",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): foo\ninvalid selection (not a number)\nsome prompt (2): ",
 			}),
 
 			Entry("when a non-selection is entered, followed by '2'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r2\r",
+				Input: "foo\n2\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): foo\r\ninvalid selection (not a number)\r\nsome prompt (2): 2\r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): foo\ninvalid selection (not a number)\nsome prompt (2): 2\n",
 			}),
 
 			Entry("when a non-selection is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: arbAns(arbitrary{"dos"}),
-				ExpectedOutput: "1: Uno\r\n2: Dos\r\n3: Tres\r\n4: none\r\nsome prompt (2): foo\r\ninvalid selection (not a number)\r\nsome prompt (2): \r\n",
+				ExpectedOutput: "1: Uno\n2: Dos\n3: Tres\n4: none\nsome prompt (2): foo\ninvalid selection (not a number)\nsome prompt (2): \n",
 			}),
 		)
 	})

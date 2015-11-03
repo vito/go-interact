@@ -18,47 +18,47 @@ var _ = Describe("Resolving into ints", func() {
 			Entry("when an integer is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "42\r",
+				Input: "42\n",
 
 				ExpectedAnswer: 42,
-				ExpectedOutput: "some prompt (0): 42\r\n",
+				ExpectedOutput: "some prompt (0): 42\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: 0,
-				ExpectedOutput: "some prompt (0): \r\n",
+				ExpectedOutput: "some prompt (0): \n",
 			}),
 
 			Entry("when a non-integer is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: 0,
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "some prompt (0): foo\r\ninvalid input (not a number)\r\nsome prompt (0): ",
+				ExpectedOutput: "some prompt (0): foo\ninvalid input (not a number)\nsome prompt (0): ",
 			}),
 
 			Entry("when a non-integer is entered, followed by an integer", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r42\r",
+				Input: "foo\n42\n",
 
 				ExpectedAnswer: 42,
-				ExpectedOutput: "some prompt (0): foo\r\ninvalid input (not a number)\r\nsome prompt (0): 42\r\n",
+				ExpectedOutput: "some prompt (0): foo\ninvalid input (not a number)\nsome prompt (0): 42\n",
 			}),
 
 			Entry("when a non-integer is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: 0,
-				ExpectedOutput: "some prompt (0): foo\r\ninvalid input (not a number)\r\nsome prompt (0): \r\n",
+				ExpectedOutput: "some prompt (0): foo\ninvalid input (not a number)\nsome prompt (0): \n",
 			}),
 		)
 
@@ -71,58 +71,58 @@ var _ = Describe("Resolving into ints", func() {
 				Entry("when an integer is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "42\r",
+					Input: "42\n",
 
 					ExpectedAnswer: 42,
-					ExpectedOutput: "some prompt: 42\r\n",
+					ExpectedOutput: "some prompt: 42\n",
 				}),
 
 				Entry("when a blank line is entered, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "\r",
+					Input: "\n",
 
 					ExpectedAnswer: 0,
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt: \r\nsome prompt: ",
+					ExpectedOutput: "some prompt: \nsome prompt: ",
 				}),
 
 				Entry("when a non-integer is entered, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r",
+					Input: "foo\n",
 
 					ExpectedAnswer: 0,
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt: foo\r\ninvalid input (not a number)\r\nsome prompt: ",
+					ExpectedOutput: "some prompt: foo\ninvalid input (not a number)\nsome prompt: ",
 				}),
 
 				Entry("when a non-integer is entered, followed by an integer", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r42\r",
+					Input: "foo\n42\n",
 
 					ExpectedAnswer: 42,
-					ExpectedOutput: "some prompt: foo\r\ninvalid input (not a number)\r\nsome prompt: 42\r\n",
+					ExpectedOutput: "some prompt: foo\ninvalid input (not a number)\nsome prompt: 42\n",
 				}),
 
 				Entry("when a non-integer is entered, followed by a blank line, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r\r",
+					Input: "foo\n\n",
 
 					ExpectedAnswer: 0,
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt: foo\r\ninvalid input (not a number)\r\nsome prompt: \r\nsome prompt: ",
+					ExpectedOutput: "some prompt: foo\ninvalid input (not a number)\nsome prompt: \nsome prompt: ",
 				}),
 
 				Entry("when a non-integer is entered, followed by a blank line, followed by an integer", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r\r42\r",
+					Input: "foo\n\n42\n",
 
 					ExpectedAnswer: 42,
-					ExpectedOutput: "some prompt: foo\r\ninvalid input (not a number)\r\nsome prompt: \r\nsome prompt: 42\r\n",
+					ExpectedOutput: "some prompt: foo\ninvalid input (not a number)\nsome prompt: \nsome prompt: 42\n",
 				}),
 			)
 		})
@@ -137,47 +137,47 @@ var _ = Describe("Resolving into ints", func() {
 			Entry("when an integer is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "42\r",
+				Input: "42\n",
 
 				ExpectedAnswer: 42,
-				ExpectedOutput: "some prompt (21): 42\r\n",
+				ExpectedOutput: "some prompt (21): 42\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: 21,
-				ExpectedOutput: "some prompt (21): \r\n",
+				ExpectedOutput: "some prompt (21): \n",
 			}),
 
 			Entry("when a non-integer is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: 21,
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "some prompt (21): foo\r\ninvalid input (not a number)\r\nsome prompt (21): ",
+				ExpectedOutput: "some prompt (21): foo\ninvalid input (not a number)\nsome prompt (21): ",
 			}),
 
 			Entry("when a non-integer is entered, followed by an integer", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r42\r",
+				Input: "foo\n42\n",
 
 				ExpectedAnswer: 42,
-				ExpectedOutput: "some prompt (21): foo\r\ninvalid input (not a number)\r\nsome prompt (21): 42\r\n",
+				ExpectedOutput: "some prompt (21): foo\ninvalid input (not a number)\nsome prompt (21): 42\n",
 			}),
 
 			Entry("when a non-integer is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: 21,
-				ExpectedOutput: "some prompt (21): foo\r\ninvalid input (not a number)\r\nsome prompt (21): \r\n",
+				ExpectedOutput: "some prompt (21): foo\ninvalid input (not a number)\nsome prompt (21): \n",
 			}),
 		)
 	})

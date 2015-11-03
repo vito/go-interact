@@ -18,74 +18,74 @@ var _ = Describe("Resolving into bools", func() {
 			Entry("when 'y' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "y\r",
+				Input: "y\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [yN]: y\r\n",
+				ExpectedOutput: "some prompt [yN]: y\n",
 			}),
 
 			Entry("when 'yes' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "yes\r",
+				Input: "yes\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [yN]: yes\r\n",
+				ExpectedOutput: "some prompt [yN]: yes\n",
 			}),
 
 			Entry("when 'n' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "n\r",
+				Input: "n\n",
 
 				ExpectedAnswer: false,
-				ExpectedOutput: "some prompt [yN]: n\r\n",
+				ExpectedOutput: "some prompt [yN]: n\n",
 			}),
 
 			Entry("when 'no' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "no\r",
+				Input: "no\n",
 
 				ExpectedAnswer: false,
-				ExpectedOutput: "some prompt [yN]: no\r\n",
+				ExpectedOutput: "some prompt [yN]: no\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: false,
-				ExpectedOutput: "some prompt [yN]: \r\n",
+				ExpectedOutput: "some prompt [yN]: \n",
 			}),
 
 			Entry("when a non-boolean is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: false,
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "some prompt [yN]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yN]: ",
+				ExpectedOutput: "some prompt [yN]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yN]: ",
 			}),
 
 			Entry("when a non-integer is entered, followed by 'y'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\ry\r",
+				Input: "foo\ny\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [yN]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yN]: y\r\n",
+				ExpectedOutput: "some prompt [yN]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yN]: y\n",
 			}),
 
 			Entry("when a non-integer is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: false,
-				ExpectedOutput: "some prompt [yN]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yN]: \r\n",
+				ExpectedOutput: "some prompt [yN]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yN]: \n",
 			}),
 		)
 
@@ -98,85 +98,85 @@ var _ = Describe("Resolving into bools", func() {
 				Entry("when 'y' is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "y\r",
+					Input: "y\n",
 
 					ExpectedAnswer: true,
-					ExpectedOutput: "some prompt [yn]: y\r\n",
+					ExpectedOutput: "some prompt [yn]: y\n",
 				}),
 
 				Entry("when 'yes' is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "yes\r",
+					Input: "yes\n",
 
 					ExpectedAnswer: true,
-					ExpectedOutput: "some prompt [yn]: yes\r\n",
+					ExpectedOutput: "some prompt [yn]: yes\n",
 				}),
 
 				Entry("when 'n' is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "n\r",
+					Input: "n\n",
 
 					ExpectedAnswer: false,
-					ExpectedOutput: "some prompt [yn]: n\r\n",
+					ExpectedOutput: "some prompt [yn]: n\n",
 				}),
 
 				Entry("when 'no' is entered", Example{
 					Prompt: "some prompt",
 
-					Input: "no\r",
+					Input: "no\n",
 
 					ExpectedAnswer: false,
-					ExpectedOutput: "some prompt [yn]: no\r\n",
+					ExpectedOutput: "some prompt [yn]: no\n",
 				}),
 
 				Entry("when a blank line is entered, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "\r",
+					Input: "\n",
 
 					ExpectedAnswer: false,
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt [yn]: \r\nsome prompt [yn]: ",
+					ExpectedOutput: "some prompt [yn]: \nsome prompt [yn]: ",
 				}),
 
 				Entry("when a non-boolean is entered, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r",
+					Input: "foo\n",
 
 					ExpectedAnswer: false,
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt [yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yn]: ",
+					ExpectedOutput: "some prompt [yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yn]: ",
 				}),
 
 				Entry("when a non-integer is entered, followed by 'y'", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\ry\r",
+					Input: "foo\ny\n",
 
 					ExpectedAnswer: true,
-					ExpectedOutput: "some prompt [yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yn]: y\r\n",
+					ExpectedOutput: "some prompt [yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yn]: y\n",
 				}),
 
 				Entry("when a non-integer is entered, followed by a blank line, followed by EOF", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r\r",
+					Input: "foo\n\n",
 
 					ExpectedAnswer: false,
 					ExpectedErr:    io.EOF,
-					ExpectedOutput: "some prompt [yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yn]: \r\nsome prompt [yn]: ",
+					ExpectedOutput: "some prompt [yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yn]: \nsome prompt [yn]: ",
 				}),
 
 				Entry("when a non-integer is entered, followed by a blank line, followed by 'y'", Example{
 					Prompt: "some prompt",
 
-					Input: "foo\r\ry\r",
+					Input: "foo\n\ny\n",
 
 					ExpectedAnswer: true,
-					ExpectedOutput: "some prompt [yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [yn]: \r\nsome prompt [yn]: y\r\n",
+					ExpectedOutput: "some prompt [yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [yn]: \nsome prompt [yn]: y\n",
 				}),
 			)
 		})
@@ -191,74 +191,74 @@ var _ = Describe("Resolving into bools", func() {
 			Entry("when 'y' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "y\r",
+				Input: "y\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [Yn]: y\r\n",
+				ExpectedOutput: "some prompt [Yn]: y\n",
 			}),
 
 			Entry("when 'yes' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "yes\r",
+				Input: "yes\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [Yn]: yes\r\n",
+				ExpectedOutput: "some prompt [Yn]: yes\n",
 			}),
 
 			Entry("when 'n' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "n\r",
+				Input: "n\n",
 
 				ExpectedAnswer: false,
-				ExpectedOutput: "some prompt [Yn]: n\r\n",
+				ExpectedOutput: "some prompt [Yn]: n\n",
 			}),
 
 			Entry("when 'no' is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "no\r",
+				Input: "no\n",
 
 				ExpectedAnswer: false,
-				ExpectedOutput: "some prompt [Yn]: no\r\n",
+				ExpectedOutput: "some prompt [Yn]: no\n",
 			}),
 
 			Entry("when a blank line is entered", Example{
 				Prompt: "some prompt",
 
-				Input: "\r",
+				Input: "\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [Yn]: \r\n",
+				ExpectedOutput: "some prompt [Yn]: \n",
 			}),
 
 			Entry("when a non-boolean is entered, followed by EOF", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r",
+				Input: "foo\n",
 
 				ExpectedAnswer: true,
 				ExpectedErr:    io.EOF,
-				ExpectedOutput: "some prompt [Yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [Yn]: ",
+				ExpectedOutput: "some prompt [Yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [Yn]: ",
 			}),
 
 			Entry("when a non-integer is entered, followed by 'y'", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\ry\r",
+				Input: "foo\ny\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [Yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [Yn]: y\r\n",
+				ExpectedOutput: "some prompt [Yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [Yn]: y\n",
 			}),
 
 			Entry("when a non-integer is entered, followed by a blank line", Example{
 				Prompt: "some prompt",
 
-				Input: "foo\r\r",
+				Input: "foo\n\n",
 
 				ExpectedAnswer: true,
-				ExpectedOutput: "some prompt [Yn]: foo\r\ninvalid input (not y, n, yes, or no)\r\nsome prompt [Yn]: \r\n",
+				ExpectedOutput: "some prompt [Yn]: foo\ninvalid input (not y, n, yes, or no)\nsome prompt [Yn]: \n",
 			}),
 		)
 	})
