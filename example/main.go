@@ -64,9 +64,9 @@ func main() {
 
 	numbers := []string{"uno", "dos", "tres"}
 
-	// 1. One
-	// 2. Two
-	// 3. Three
+	// 1: One
+	// 2: Two
+	// 3: Three
 	// Choose a number:
 	var chosenFoo string
 	err = interact.NewInteraction(
@@ -81,9 +81,9 @@ func main() {
 
 	fmt.Println(chosenFoo)
 
-	// 1. One
-	// 2. Two
-	// 3. Three
+	// 1: One
+	// 2: Two
+	// 3: Three
 	// Choose a number (2):
 	chosenFooWithDefault := "dos"
 	err = interact.NewInteraction(
@@ -126,15 +126,14 @@ func main() {
 
 	fmt.Println(username)
 
-	// // Password:
-	// // will print '*'s instead of characters
-	// var password interact.Password
-	// err = interact.NewInteraction("Password").Resolve(interact.Required(&password))
-	// if err != nil {
-	// 	fatal(err)
-	// }
-	//
-	// fmt.Println(password)
+	// Password:
+	var password interact.Password
+	err = interact.NewInteraction("Password").Resolve(interact.Required(&password))
+	if err != nil {
+		fatal(err)
+	}
+
+	fmt.Println(password)
 }
 
 func fatal(err error) {
