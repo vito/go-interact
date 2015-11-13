@@ -1,10 +1,11 @@
 package interact
 
 import (
+	"errors"
 	"fmt"
 	"io"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/vito/go-interact/interact/terminal"
 )
 
 type userIO interface {
@@ -17,6 +18,8 @@ type userIO interface {
 type ttyUser struct {
 	*terminal.Terminal
 }
+
+var ErrKeyboardInterrupt = errors.New("keyboard interrupt")
 
 func newTTYUser(input io.Reader, output io.Writer) ttyUser {
 	return ttyUser{
@@ -31,7 +34,12 @@ func (u ttyUser) WriteLine(line string) error {
 
 func (u ttyUser) ReadLine(prompt string) (string, error) {
 	u.Terminal.SetPrompt(prompt)
-	return u.Terminal.ReadLine()
+	input, err := u.Terminal.ReadLine()
+	if err == terminal.ErrKeyboardInterrupt {
+		return input, ErrKeyboardInterrupt
+	}
+
+	return input, err
 }
 
 type nonTTYUser struct {

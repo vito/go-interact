@@ -61,3 +61,7 @@ send "\r"
 expect "\r\nPassword: " {} timeout { exit 1 }
 send "baggins\r"
 expect "\r\nbaggins\r\n" {} timeout { exit 1 }
+
+expect -ex {Interrupt:} {} timeout { exit 1 }
+send \003
+expect "keyboard interrupt" {} timeout { exit 1 }

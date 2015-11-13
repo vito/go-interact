@@ -134,6 +134,13 @@ func main() {
 	}
 
 	fmt.Println(password)
+
+	// Interrupt:
+	var ctrlCTest string
+	err = interact.NewInteraction("Interrupt").Resolve(interact.Required(&ctrlCTest))
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func fatal(err error) {

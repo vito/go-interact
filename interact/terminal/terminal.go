@@ -6,10 +6,13 @@ package terminal
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"sync"
 	"unicode/utf8"
 )
+
+var ErrKeyboardInterrupt = errors.New("interrupt")
 
 // EscapeCodes contains escape sequences that can be written to the terminal in
 // order to achieve different styles of text.
@@ -111,6 +114,7 @@ func NewTerminal(c io.ReadWriter, prompt string) *Terminal {
 }
 
 const (
+	keyCtrlC     = 3
 	keyCtrlD     = 4
 	keyCtrlU     = 21
 	keyEnter     = '\r'
@@ -685,6 +689,9 @@ func (t *Terminal) readLine() (line string, err error) {
 				break
 			}
 			if !t.pasteActive {
+				if key == keyCtrlC {
+					return "", ErrKeyboardInterrupt
+				}
 				if key == keyCtrlD {
 					if len(t.line) == 0 {
 						return "", io.EOF
