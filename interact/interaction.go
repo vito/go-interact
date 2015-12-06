@@ -52,8 +52,9 @@ func NewInteraction(prompt string, choices ...Choice) Interaction {
 // for the destination are int, string, bool, and any arbitrary value that is
 // defined within the set of Choices.
 //
-// Valid input strings for bools are "y", "n", "yes", and "no". Integer values
-// are parsed in base-10. String values will not include any trailing linebreak.
+// Valid input strings for bools are "y", "n", "Y", "N", "yes", and "no".
+// Integer values are parsed in base-10. String values will not include any
+// trailing linebreak.
 func (interaction Interaction) Resolve(dst interface{}) error {
 	prompt := interaction.prompt(dst)
 
@@ -290,9 +291,9 @@ func (interaction Interaction) readInto(dst interface{}, user userIO, prompt str
 		}
 
 		switch line {
-		case "y", "yes":
+		case "y", "Y", "yes":
 			*v = true
-		case "n", "no":
+		case "n", "N", "no":
 			*v = false
 		default:
 			return false, true, ErrNotBoolean

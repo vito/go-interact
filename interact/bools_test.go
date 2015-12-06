@@ -42,6 +42,15 @@ var _ = Describe("Resolving into bools", func() {
 				ExpectedOutput: "some prompt [yN]: n\n",
 			}),
 
+			Entry("when 'N' is entered", Example{
+				Prompt: "some prompt",
+
+				Input: "N\n",
+
+				ExpectedAnswer: false,
+				ExpectedOutput: "some prompt [yN]: N\n",
+			}),
+
 			Entry("when 'no' is entered", Example{
 				Prompt: "some prompt",
 
@@ -195,6 +204,15 @@ var _ = Describe("Resolving into bools", func() {
 
 				ExpectedAnswer: true,
 				ExpectedOutput: "some prompt [Yn]: y\n",
+			}),
+
+			Entry("when 'Y' is entered", Example{
+				Prompt: "some prompt",
+
+				Input: "Y\n",
+
+				ExpectedAnswer: true,
+				ExpectedOutput: "some prompt [Yn]: Y\n",
 			}),
 
 			Entry("when 'yes' is entered", Example{
