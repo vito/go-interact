@@ -6,13 +6,10 @@ package terminal
 
 import (
 	"bytes"
-	"errors"
 	"io"
 	"sync"
 	"unicode/utf8"
 )
-
-var ErrKeyboardInterrupt = errors.New("interrupt")
 
 // EscapeCodes contains escape sequences that can be written to the terminal in
 // order to achieve different styles of text.
@@ -114,7 +111,6 @@ func NewTerminal(c io.ReadWriter, prompt string) *Terminal {
 }
 
 const (
-	keyCtrlC     = 3
 	keyCtrlD     = 4
 	keyCtrlU     = 21
 	keyEnter     = '\r'
@@ -721,9 +717,6 @@ func (t *Terminal) readLine() (line string, err error) {
 				break
 			}
 			if !t.pasteActive {
-				if key == keyCtrlC {
-					return "", ErrKeyboardInterrupt
-				}
 				if key == keyCtrlD {
 					if len(t.line) == 0 {
 						return "", io.EOF
@@ -779,8 +772,6 @@ func (t *Terminal) readLine() (line string, err error) {
 
 		t.remainder = t.inBuf[:n+len(t.remainder)]
 	}
-
-	panic("unreachable") // for Go 1.0.
 }
 
 // SetPrompt sets the prompt to be used when reading subsequent lines.
@@ -928,4 +919,33 @@ func (s *stRingBuffer) NthPreviousEntry(n int) (value string, ok bool) {
 		index += s.max
 	}
 	return s.entries[index], true
+}
+
+// readPasswordLine reads from reader until it finds \n or io.EOF.
+// The slice returned does not include the \n.
+// readPasswordLine also ignores any \r it finds.
+func readPasswordLine(reader io.Reader) ([]byte, error) {
+	var buf [1]byte
+	var ret []byte
+
+	for {
+		n, err := reader.Read(buf[:])
+		if n > 0 {
+			switch buf[0] {
+			case '\n':
+				return ret, nil
+			case '\r':
+				// remove \r from passwords on Windows
+			default:
+				ret = append(ret, buf[0])
+			}
+			continue
+		}
+		if err != nil {
+			if err == io.EOF && len(ret) > 0 {
+				return ret, nil
+			}
+			return ret, err
+		}
+	}
 }
