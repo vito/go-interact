@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/vito/go-interact/interact/terminal"
 )
@@ -25,6 +26,14 @@ func newTTYUser(input io.Reader, output io.Writer) ttyUser {
 	return ttyUser{
 		Terminal: terminal.NewTerminal(readWriter{input, output}, ""),
 	}
+}
+
+func (u ttyUser) detectTerminalSize(file *os.File) error {
+	width, height, err := terminal.GetSize(int(file.Fd()))
+	if err != nil {
+		return err
+	}
+	return u.SetSize(width, height)
 }
 
 func (u ttyUser) WriteLine(line string) error {
