@@ -67,11 +67,11 @@ func (interaction Interaction) Resolve(dst interface{}) error {
 
 		defer terminal.Restore(int(file.Fd()), state)
 
-		term := newTTYUser(interaction.Input, interaction.Output)
-		err = term.detectTerminalSize(file)
+		term, err := newTTYUser(file, interaction.Output)
 		if err != nil {
 			return err
 		}
+
 		user = term
 	} else {
 		user = newNonTTYUser(interaction.Input, interaction.Output)

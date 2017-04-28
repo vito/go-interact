@@ -22,18 +22,22 @@ type ttyUser struct {
 
 var ErrKeyboardInterrupt = errors.New("keyboard interrupt")
 
-func newTTYUser(input io.Reader, output io.Writer) ttyUser {
-	return ttyUser{
-		Terminal: terminal.NewTerminal(readWriter{input, output}, ""),
-	}
-}
+func newTTYUser(input *os.File, output io.Writer) (ttyUser, error) {
+	term := terminal.NewTerminal(readWriter{input, output}, "")
 
-func (u ttyUser) detectTerminalSize(file *os.File) error {
-	width, height, err := terminal.GetSize(int(file.Fd()))
+	width, height, err := terminal.GetSize(int(input.Fd()))
 	if err != nil {
-		return err
+		return ttyUser{}, err
 	}
-	return u.SetSize(width, height)
+
+	err = term.SetSize(width, height)
+	if err != nil {
+		return ttyUser{}, err
+	}
+
+	return ttyUser{
+		Terminal: term,
+	}, nil
 }
 
 func (u ttyUser) WriteLine(line string) error {
