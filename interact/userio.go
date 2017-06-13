@@ -120,6 +120,8 @@ func (u nonTTYUser) readLine() (string, error) {
 		if n == 1 {
 			if chr[0] == '\n' {
 				return line, nil
+			} else if chr[0] == '\r' {
+				continue
 			}
 
 			line += string(chr)
