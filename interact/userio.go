@@ -22,10 +22,10 @@ type ttyUser struct {
 
 var ErrKeyboardInterrupt = errors.New("keyboard interrupt")
 
-func newTTYUser(input *os.File, output io.Writer) (ttyUser, error) {
+func newTTYUser(input io.Reader, output *os.File) (ttyUser, error) {
 	term := terminal.NewTerminal(readWriter{input, output}, "")
 
-	width, height, err := terminal.GetSize(int(input.Fd()))
+	width, height, err := terminal.GetSize(int(output.Fd()))
 	if err != nil {
 		return ttyUser{}, err
 	}
