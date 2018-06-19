@@ -59,7 +59,7 @@ func (interaction Interaction) Resolve(dst interface{}) error {
 	prompt := interaction.prompt(dst)
 
 	var user userIO
-	if input, output, ok := interaction.getStreams(); ok && terminal.IsTerminal(int(input.Fd())) {
+	if input, output, ok := interaction.getStreams(); ok && terminal.IsTerminal(int(output.Fd())) {
 		state, err := terminal.MakeRaw(int(input.Fd()))
 		if err != nil {
 			return err
