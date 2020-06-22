@@ -1,6 +1,7 @@
 package interact_test
 
 import (
+	"io"
 	"io/ioutil"
 	"os"
 
@@ -14,7 +15,7 @@ import (
 var _ = Describe("User IO", func() {
 	Describe("fetching input from the user", func() {
 		Context("when the terminal reports Ctrl-C was pressed", func() {
-			It("returns ErrKeyboardInterrupt", func() {
+			It("returns EOF", func() {
 				aPty, tty, err := pty.Open()
 				Expect(err).NotTo(HaveOccurred())
 
@@ -32,7 +33,7 @@ var _ = Describe("User IO", func() {
 				var thing string
 				err = interaction.Resolve(&thing)
 
-				Expect(err).To(Equal(interact.ErrKeyboardInterrupt))
+				Expect(err).To(Equal(io.EOF))
 			})
 		})
 	})
