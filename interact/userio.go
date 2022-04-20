@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 type userIO interface {
@@ -16,24 +16,24 @@ type userIO interface {
 }
 
 type ttyUser struct {
-	*terminal.Terminal
+	*term.Terminal
 }
 
 func newTTYUser(input io.Reader, output *os.File) (ttyUser, error) {
-	term := terminal.NewTerminal(readWriter{input, output}, "")
+	t := term.NewTerminal(readWriter{input, output}, "")
 
-	width, height, err := terminal.GetSize(int(output.Fd()))
+	width, height, err := term.GetSize(int(output.Fd()))
 	if err != nil {
 		return ttyUser{}, err
 	}
 
-	err = term.SetSize(width, height)
+	err = t.SetSize(width, height)
 	if err != nil {
 		return ttyUser{}, err
 	}
 
 	return ttyUser{
-		Terminal: term,
+		Terminal: t,
 	}, nil
 }
 
