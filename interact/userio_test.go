@@ -2,11 +2,10 @@ package interact_test
 
 import (
 	"io"
-	"io/ioutil"
 	"os"
 
 	"github.com/kr/pty"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/vito/go-interact/interact"
@@ -44,12 +43,12 @@ var _ = Describe("User IO", func() {
 
 			BeforeEach(func() {
 				var err error
-				input, err = ioutil.TempFile("", "go-interact-input")
+				input, err = os.CreateTemp("", "go-interact-input")
 				Expect(err).ToNot(HaveOccurred())
-				err = ioutil.WriteFile(input.Name(), []byte("What do you mean? An African or European swallow?\r\n"), 0644)
+				err = os.WriteFile(input.Name(), []byte("What do you mean? An African or European swallow?\r\n"), 0644)
 				Expect(err).ToNot(HaveOccurred())
 
-				output, err = ioutil.TempFile("", "go-interact-output")
+				output, err = os.CreateTemp("", "go-interact-output")
 				Expect(err).ToNot(HaveOccurred())
 			})
 
